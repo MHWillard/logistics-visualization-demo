@@ -5,8 +5,6 @@ VisualStudioVersion = 17.14.36915.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "logistics-visualization-demo", "logistics-visualization-demo.csproj", "{83ACF4DE-5E8D-41A5-B136-1E114342675C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "logistics-visualization-demo.tests", "..\logistics-visualization-demo.tests\logistics-visualization-demo.tests.csproj", "{8B02272E-3AD1-436C-AD28-B86B6E3347ED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{83ACF4DE-5E8D-41A5-B136-1E114342675C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83ACF4DE-5E8D-41A5-B136-1E114342675C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83ACF4DE-5E8D-41A5-B136-1E114342675C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B02272E-3AD1-436C-AD28-B86B6E3347ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B02272E-3AD1-436C-AD28-B86B6E3347ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B02272E-3AD1-436C-AD28-B86B6E3347ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B02272E-3AD1-436C-AD28-B86B6E3347ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
