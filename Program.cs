@@ -1,6 +1,5 @@
 using logistics_visualization_demo.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace logistics_visualization_demo
@@ -18,9 +17,10 @@ namespace logistics_visualization_demo
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var connString = "Data Source=RecordStore.db";
-            //builder.Services.AddSqlLite<RecordContext>(connString);
+            builder.Services.AddDbContext<RecordContext>(options =>
+  options.UseSqlServer(builder.Configuration.GetConnectionString("RecordContext")));
 
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             var app = builder.Build();
 
@@ -29,6 +29,11 @@ namespace logistics_visualization_demo
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+            }
+            else
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
 
             app.UseHttpsRedirection();

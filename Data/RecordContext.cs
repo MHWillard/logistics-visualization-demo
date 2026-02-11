@@ -8,23 +8,22 @@ namespace logistics_visualization_demo.Data
 {
     public class RecordContext : DbContext
     {
+        public RecordContext(DbContextOptions<RecordContext> options)
+    : base(options)
+        {
+        }
+
         public DbSet<Company> Companies { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
-        public string DbPath { get; }
-
-        public RecordContext()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "recordstore.db");
+            modelBuilder.Entity<Company>().ToTable("Company");
+            modelBuilder.Entity<Order>().ToTable("Order");
+            modelBuilder.Entity<Product>().ToTable("Product");
+            modelBuilder.Entity<OrderDetail>().ToTable("OrderDetail");
         }
-
-        // The following configures EF to create a Sqlite database file in the
-        // special "local" folder for your platform.
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
     }
 }
