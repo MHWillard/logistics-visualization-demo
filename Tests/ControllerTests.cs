@@ -1,23 +1,37 @@
 ﻿using Xunit;
+using logistics_visualization_demo.Models;
 using logistics_visualization_demo.Controllers;
+using System.Text.Json;
 
 namespace logistics_visualization_demo.Tests
 {
     public class ControllerTests
     {
         [Fact]
-        public void PollingTable_ReturnsData() 
+        public void GetDataFromOrderDetailsTable() 
         {
-            //behavior: when a route on the Datacontroller polls a table for data, it returns that data, in the format of company name/total income/date (which has month and year)
+            /*
+             when get route is called, it should return the data from the order details table in the database.
+             */
+            OrderDetail orderDetail = new OrderDetail
+            {
+                OrderId = 1,
+                CompanyId = 1,
+                ProductId = 1,
+                Quantity = 5
+            };
+            string testOrderDetailsData = JsonSerializer.Serialize(orderDetail);
+
             //arrange
-            //add any mocks here or stubs for the actual database and the controller
-            DataController DataController = new DataController();
+            //add controller and mock database context here
+            //add data to check against here
+
 
             //act
-            string result = DataController.GetRecords();
+            //call the get route here through the controller using the mock
 
             //assert
-            Assert.Equal("Shiphole, $5000, March 2020", result);
+            //assert that the data returned from the get route is the same as the data set up in the arrange step
         }
     }
 }
