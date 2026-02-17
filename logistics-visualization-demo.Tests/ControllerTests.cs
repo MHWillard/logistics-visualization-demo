@@ -13,14 +13,7 @@ namespace logistics_visualization_demo.Tests
             /*
  when get route is called, it should return the data from the order details table in the database.
  */
-            OrderDetail orderDetail = new OrderDetail
-            {
-                OrderId = 1,
-                CompanyId = 1,
-                ProductId = 1,
-                Quantity = 5
-            };
-            string testOrderDetailsData = JsonSerializer.Serialize(orderDetail);
+            string testOrderDetailsData = "{'OrderDetailId':0,'OrderId':1,'CompanyId':0,'ProductId':1, 'Quantity':5}";
 
             //arrange
             //add controller and mock database context here

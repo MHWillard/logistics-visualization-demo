@@ -3,8 +3,8 @@
     public class DataController
     {
         public string GetRecords()
-        { 
-            return "Shiphole, $5000, March 2020";
+        {
+            return "{'OrderDetailId':0,'OrderId':1,'CompanyId':0,'ProductId':1, 'Quantity':5}";
         }
     }
 }
