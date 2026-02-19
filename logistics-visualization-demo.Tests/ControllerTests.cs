@@ -1,5 +1,7 @@
 using logistics_visualization_demo.Controllers;
+using logistics_visualization_demo.Data;
 using logistics_visualization_demo.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using Xunit;
 
@@ -10,23 +12,42 @@ namespace logistics_visualization_demo.Tests
         [Fact]
         public void GetDataFromOrderDetailsTable()
         {
-            /*
- when get route is called, it should return the data from the order details table in the database.
- */
-            string testOrderDetailsData = "{'OrderDetailId':0,'OrderId':1,'CompanyId':0,'ProductId':1, 'Quantity':5}";
+            // arrange
+            var options = new DbContextOptionsBuilder<RecordContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
 
-            //arrange
-            //add controller and mock database context here
-            //add data to check against here
-            DataController dataController = new DataController(/*add mock database context here*/);
+            var testOrderDetail = new OrderDetail
+            {
+                OrderDetailId = 1,
+                OrderId = 1,
+                CompanyId = 1,
+                ProductId = 1,
+                Quantity = 5
+            };
 
-            //act
-            //call the get route here through the controller using the mock
-            string returnData = dataController.GetRecords();
+            using (var context = new RecordContext(options))
+            {
+                context.OrderDetails.Add(testOrderDetail);
+                context.SaveChanges();
+            }
 
-            //assert
-            //assert that the data returned from the get route is the same as the data set up in the arrange step
-            Assert.Equal(testOrderDetailsData, returnData);
+            using (var context = new RecordContext(options))
+            {
+                var dataController = new DataController(context);
+
+                // act
+                string returnData = dataController.GetRecords(orderId: 1);
+
+                // assert
+                var orderDetails = JsonSerializer.Deserialize<List<OrderDetail>>(returnData);
+                Assert.NotNull(orderDetails);
+                Assert.Single(orderDetails);
+                Assert.Equal(testOrderDetail.OrderId, orderDetails![0].OrderId);
+                Assert.Equal(testOrderDetail.CompanyId, orderDetails[0].CompanyId);
+                Assert.Equal(testOrderDetail.ProductId, orderDetails[0].ProductId);
+                Assert.Equal(testOrderDetail.Quantity, orderDetails[0].Quantity);
+            }
         }
     }
 }

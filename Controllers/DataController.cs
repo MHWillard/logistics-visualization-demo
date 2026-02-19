@@ -1,10 +1,28 @@
-﻿namespace logistics_visualization_demo.Controllers
+using logistics_visualization_demo.Data;
+using logistics_visualization_demo.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+
+namespace logistics_visualization_demo.Controllers
 {
-    public class DataController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DataController : ControllerBase
     {
-        public string GetRecords()
+        private readonly RecordContext _context;
+
+        public DataController(RecordContext context)
         {
-            return "{'OrderDetailId':0,'OrderId':1,'CompanyId':0,'ProductId':1, 'Quantity':5}";
+            _context = context;
+        }
+
+        [HttpGet]
+        public string GetRecords([FromQuery] int orderId)
+        {
+            var orderDetails = _context.OrderDetails
+                .Where(od => od.OrderId == orderId)
+                .ToList();
+            return JsonSerializer.Serialize(orderDetails);
         }
     }
 }
