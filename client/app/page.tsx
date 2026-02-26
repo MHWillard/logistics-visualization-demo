@@ -1,6 +1,20 @@
+'use client'
+
 import Image from "next/image";
+import {useState, useEffect} from "react";
+import {getOrderDetails} from "../lib/api";
 
 export default function Home() {
+const [orderDetails, setOrderDetails] = useState<any | null>(null);
+
+useEffect(() => {
+  getOrderDetails(1)
+  .then(setOrderDetails)
+  .catch(error => {
+    console.error('Error fetching order details:', error);
+  });
+}, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">

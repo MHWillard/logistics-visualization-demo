@@ -1,10 +1,28 @@
-﻿namespace logistics_visualization_demo.Controllers
+using logistics_visualization_demo.Data;
+using logistics_visualization_demo.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+
+namespace logistics_visualization_demo.Controllers
 {
-    public class DataController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DataController : ControllerBase
     {
-        public string GetRecords()
-        { 
-            return "Shiphole, $5000, March 2020";
+        private readonly RecordContext _context;
+
+        public DataController(RecordContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public string GetRecords([FromQuery] int orderId)
+        {
+            var orderDetails = _context.OrderDetails
+                .Where(od => od.OrderId == orderId)
+                .ToList();
+            return JsonSerializer.Serialize(orderDetails);
         }
     }
 }
