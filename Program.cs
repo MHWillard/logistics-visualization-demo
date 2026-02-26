@@ -22,6 +22,17 @@ namespace logistics_visualization_demo
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -49,7 +60,7 @@ namespace logistics_visualization_demo
 
             app.UseAuthorization();
 
-
+            app.UseCors("AllowFrontend");
             app.MapControllers();
 
             app.Run();
