@@ -24,5 +24,4 @@ namespace logistics_visualization_demo.Controllers
                 .ToList();
             return JsonSerializer.Serialize(orderDetails);
         }
-    }
 }
