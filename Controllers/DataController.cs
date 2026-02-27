@@ -16,12 +16,40 @@ namespace logistics_visualization_demo.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public string GetRecords([FromQuery] int orderId)
+        [HttpGet("details")]
+        public string GetOrderDetails([FromQuery] int orderId)
         {
             var orderDetails = _context.OrderDetails
                 .Where(od => od.OrderId == orderId)
                 .ToList();
             return JsonSerializer.Serialize(orderDetails);
         }
+
+        [HttpGet("company")]
+        public string GetCompany([FromQuery] int companyId)
+        {
+            var company = _context.Companies
+                .FirstOrDefault(c => c.CompanyId == companyId);
+
+            return JsonSerializer.Serialize(company);
+        }
+
+        [HttpGet("order")]
+        public string GetOrder([FromQuery] int orderId)
+        {
+            var order = _context.Orders
+                .FirstOrDefault(o => o.OrderId == orderId);
+
+            return JsonSerializer.Serialize(order);
+        }
+
+        [HttpGet("product")]
+        public string GetProduct([FromQuery] int productId)
+        {
+            var product = _context.Products
+                .FirstOrDefault(p => p.ProductId == productId);
+
+            return JsonSerializer.Serialize(product);
+        }
+    }
 }
