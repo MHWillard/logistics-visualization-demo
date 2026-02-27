@@ -49,5 +49,4 @@ namespace logistics_visualization_demo.Tests
                 Assert.Equal(testOrderDetail.Quantity, orderDetails[0].Quantity);
             }
         }
-    }
 }
