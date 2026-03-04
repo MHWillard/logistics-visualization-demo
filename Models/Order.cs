@@ -7,5 +7,6 @@ namespace logistics_visualization_demo.Models
     {
         public int OrderId { get; set; }
         public int CompanyId { get; set; }
+        public DateTime OrderDate { get; set; }
     }
 }

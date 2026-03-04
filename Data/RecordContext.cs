@@ -8,7 +8,7 @@ namespace logistics_visualization_demo.Data
     public class RecordContext : DbContext
     {
         public RecordContext(DbContextOptions<RecordContext> options)
-    : base(options)
+            : base(options)
         {
         }
 
@@ -21,7 +21,9 @@ namespace logistics_visualization_demo.Data
         {
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Order>().ToTable("Order");
-            modelBuilder.Entity<Product>().ToTable("Product");
+            modelBuilder.Entity<Product>().ToTable("Product")
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
             modelBuilder.Entity<OrderDetail>().ToTable("OrderDetail");
         }
     }

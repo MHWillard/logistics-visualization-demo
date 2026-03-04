@@ -14,11 +14,11 @@ namespace logistics_visualization_demo.Data
 
             var orders = new Order[]
             {
-                new Order{CompanyId=1},
-                new Order{CompanyId=1},
-                new Order{CompanyId=2},
-                new Order{CompanyId=3},
-                new Order{CompanyId=3},
+                new Order{CompanyId=1, OrderDate=new DateTime(2024, 1, 1)},
+                new Order{CompanyId=1, OrderDate=new DateTime(2024, 1, 5)},
+                new Order{CompanyId=2, OrderDate=new DateTime(2024, 3, 3)},
+                new Order{CompanyId=3, OrderDate=new DateTime(2024, 3, 4)},
+                new Order{CompanyId=3, OrderDate=new DateTime(2024, 4, 5)},
             };
 
             context.Orders.AddRange(orders);
