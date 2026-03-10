@@ -51,5 +51,24 @@ namespace logistics_visualization_demo.Controllers
 
             return JsonSerializer.Serialize(product);
         }
+
+        [HttpGet("monthly")]
+        public string GetMonthlyOrderStats([FromQuery] int? year, [FromQuery] int? month)
+        {
+            var query = _context.MonthlyOrderStats.AsQueryable();
+
+            if (year.HasValue)
+            {
+                query = query.Where(m => m.Year == year.Value);
+            }
+
+            if (month.HasValue)
+            {
+                query = query.Where(m => m.Month == month.Value);
+            }
+
+            var stats = query.ToList();
+            return JsonSerializer.Serialize(stats);
+        }
     }
 }

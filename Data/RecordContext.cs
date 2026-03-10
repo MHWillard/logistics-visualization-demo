@@ -16,6 +16,7 @@ namespace logistics_visualization_demo.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<MonthlyOrderStat> MonthlyOrderStats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,8 @@ namespace logistics_visualization_demo.Data
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
             modelBuilder.Entity<OrderDetail>().ToTable("OrderDetail");
+            modelBuilder.Entity<MonthlyOrderStat>().ToView("MonthlyOrderStats").HasNoKey()
+                .Property(m => m.TotalIncome).HasPrecision(18, 2);
         }
     }
 }

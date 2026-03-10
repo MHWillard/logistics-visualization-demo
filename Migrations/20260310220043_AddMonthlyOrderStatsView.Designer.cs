@@ -12,8 +12,8 @@ using logistics_visualization_demo.Data;
 namespace logistics_visualization_demo.Migrations
 {
     [DbContext(typeof(RecordContext))]
-    [Migration("20260304214235_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260310220043_AddMonthlyOrderStatsView")]
+    partial class AddMonthlyOrderStatsView
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,36 @@ namespace logistics_visualization_demo.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Company", (string)null);
+                });
+
+            modelBuilder.Entity("logistics_visualization_demo.Models.MonthlyOrderStat", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalIncome")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("MonthlyOrderStats", (string)null);
                 });
 
             modelBuilder.Entity("logistics_visualization_demo.Models.Order", b =>

@@ -67,11 +67,30 @@ namespace logistics_visualization_demo.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.ProductId);
                 });
+
+            migrationBuilder.Sql(@"
+                CREATE VIEW MonthlyOrderStats AS
+                SELECT
+                    CAST(YEAR(o.OrderDate) AS VARCHAR(4)) + '-' + RIGHT('0' + CAST(MONTH(o.OrderDate) AS VARCHAR(2)), 2) + '-' + CAST(c.CompanyId AS VARCHAR(10)) AS Id,
+                    YEAR(o.OrderDate) AS Year,
+                    MONTH(o.OrderDate) AS Month,
+                    c.CompanyId,
+                    c.Name AS CompanyName,
+                    COUNT(DISTINCT o.OrderId) AS TotalOrders,
+                    SUM(od.Quantity * p.Price) AS TotalIncome
+                FROM [Order] o
+                JOIN Company c ON o.CompanyId = c.CompanyId
+                JOIN OrderDetail od ON o.OrderId = od.OrderId
+                JOIN Product p ON od.ProductId = p.ProductId
+                GROUP BY YEAR(o.OrderDate), MONTH(o.OrderDate), c.CompanyId, c.Name
+            ");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("DROP VIEW IF EXISTS MonthlyOrderStats");
+
             migrationBuilder.DropTable(
                 name: "Company");
 
