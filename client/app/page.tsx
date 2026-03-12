@@ -1,19 +1,71 @@
 'use client'
 
 import Image from "next/image";
-import {useState, useEffect} from "react";
-import {getOrderDetails} from "../lib/api";
+import { useState, useEffect, useRef } from "react";
+import { getOrderDetails } from "../lib/api";
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 export default function Home() {
-const [orderDetails, setOrderDetails] = useState<any | null>(null);
+  const [orderDetails, setOrderDetails] = useState<Record<string, unknown> | null>(null);
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstanceRef = useRef<Chart | null>(null);
 
-useEffect(() => {
-  getOrderDetails(1)
-  .then(setOrderDetails)
-  .catch(error => {
-    console.error('Error fetching order details:', error);
-  });
-}, []);
+  useEffect(() => {
+    getOrderDetails(1)
+      .then(setOrderDetails)
+      .catch(error => {
+        console.error('Error fetching order details:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (orderDetails && chartRef.current && !chartInstanceRef.current) {
+      const ctx = chartRef.current;
+      chartInstanceRef.current = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)',
+              'rgba(255, 159, 64, 0.5)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [orderDetails]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -72,6 +124,10 @@ useEffect(() => {
           >
             Documentation
           </a>
+        </div>
+        <div className="mt-8 w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-4 text-black dark:text-zinc-50">Chart.js Example</h2>
+          <canvas ref={chartRef} width="400" height="400"></canvas>
         </div>
       </main>
     </div>
