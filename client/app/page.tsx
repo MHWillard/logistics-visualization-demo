@@ -1,17 +1,17 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { getOrderDetails } from "../lib/api";
+import { getMonthlyOrderStats } from "../lib/api";
 import { Chart, registerables } from 'chart.js';
 import {Bar} from "react-chartjs-2";
 
 Chart.register(...registerables);
 
 export default function Home() {
-  const [orderDetails, setOrderDetails] = useState<Record<string, unknown> | null>(null);
+  const [monthlyStats, setMonthlyStats] = useState<{ CompanyName: string; TotalIncome: number }[] | null>(null);
 
-  const labels = ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug"];
-  const datasets = [12, 45, 67, 43, 89, 34, 67, 43];
+  const labels = monthlyStats?.map((stat) => stat.CompanyName) || [];
+  const datasets = monthlyStats?.map((stat) => Number(stat.TotalIncome)) || [];
   const data = {
     labels: labels,
     datasets: [
@@ -46,16 +46,16 @@ export default function Home() {
       y: {
         title: {
           display: true,
-          text: "Y-axis Lable",
+          text: "Total Income",
         },
         display: true,
         beginAtZero: true,
-        max: 100,
+        max: 9999.99,
       },
       x: {
         title: {
           display: true,
-          text: "x-axis Lable",
+          text: "Companies",
         },
         display: true,
       },
@@ -63,10 +63,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getOrderDetails(1)
-      .then(setOrderDetails)
+    getMonthlyOrderStats()
+      .then(setMonthlyStats)
       .catch(error => {
-        console.error('Error fetching order details:', error);
+        console.error('Error fetching monthly order stats:', error);
       });
   }, []);
 

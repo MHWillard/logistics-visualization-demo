@@ -1,12 +1,14 @@
-   // Fetches from your .NET backend at e.g. http://localhost:5088/api/data/order?orderId=...
-    export async function getOrderDetails(orderId: number) {
+   // Fetches from your .NET backend at e.g. http://localhost:5088/api/data/monthly
+    export async function getMonthlyOrderStats() {
      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-     const response = await fetch(`${API_BASE}/api/data/order?orderId=${orderId}`);
+     const response = await fetch(`${API_BASE}/api/data/monthly`);
        if (!response.ok) {
-         console.error('Failed to fetch order details');
-         throw new Error('Failed to fetch order details');
+         console.error('Failed to fetch monthly order stats');
+         throw new Error('Failed to fetch monthly order stats');
        }
-       console.log('Order details fetched successfully');
-       return response.json();
+       console.log('Monthly order stats fetched successfully');
+       const data = await response.json();
+       console.log('Monthly order stats data:', data);
+       return data;
      }

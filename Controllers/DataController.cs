@@ -53,21 +53,32 @@ namespace logistics_visualization_demo.Controllers
         }
 
         [HttpGet("monthly")]
-        public string GetMonthlyOrderStats([FromQuery] int? year, [FromQuery] int? month)
+        public string GetMonthlyOrderStats()
         {
-            var query = _context.MonthlyOrderStats.AsQueryable();
-
-            if (year.HasValue)
+            // var stats = _context.MonthlyOrderStats.ToList();
+            var stats = new List<MonthlyOrderStat>
             {
-                query = query.Where(m => m.Year == year.Value);
-            }
-
-            if (month.HasValue)
-            {
-                query = query.Where(m => m.Month == month.Value);
-            }
-
-            var stats = query.ToList();
+                new MonthlyOrderStat
+                {
+                    Id = "1-2024-1",
+                    Year = 2024,
+                    Month = 1,
+                    CompanyId = 1,
+                    CompanyName = "Test Company 1",
+                    TotalOrders = 10,
+                    TotalIncome = 1500.50m
+                },
+                new MonthlyOrderStat
+                {
+                    Id = "2-2024-2",
+                    Year = 2024,
+                    Month = 2,
+                    CompanyId = 2,
+                    CompanyName = "Test Company 2",
+                    TotalOrders = 15,
+                    TotalIncome = 2500.75m
+                }
+            };
             return JsonSerializer.Serialize(stats);
         }
     }
