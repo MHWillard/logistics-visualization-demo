@@ -64,7 +64,7 @@ namespace logistics_visualization_demo.Controllers
                     Year = 2024,
                     Month = 1,
                     CompanyId = 1,
-                    CompanyName = "Test Company 1",
+                    CompanyName = "Delta Freight",
                     TotalOrders = 10,
                     TotalIncome = 1500.50m
                 },
@@ -74,9 +74,39 @@ namespace logistics_visualization_demo.Controllers
                     Year = 2024,
                     Month = 2,
                     CompanyId = 2,
-                    CompanyName = "Test Company 2",
+                    CompanyName = "Nu Brokerage",
                     TotalOrders = 15,
                     TotalIncome = 2500.75m
+                },
+                new MonthlyOrderStat
+                {
+                    Id = "3-2024-3",
+                    Year = 2024,
+                    Month = 3,
+                    CompanyId = 3,
+                    CompanyName = "Alpha Logistics",
+                    TotalOrders = 145,
+                    TotalIncome = 4250.00m
+                },
+                new MonthlyOrderStat
+                {
+                    Id = "4-2024-4",
+                    Year = 2024,
+                    Month = 4,
+                    CompanyId = 4,
+                    CompanyName = "Beta Transport",
+                    TotalOrders = 89,
+                    TotalIncome = 3100.50m
+                },
+                new MonthlyOrderStat
+                {
+                    Id = "5-2024-5",
+                    Year = 2024,
+                    Month = 5,
+                    CompanyId = 5,
+                    CompanyName = "Gamma Shipping",
+                    TotalOrders = 178,
+                    TotalIncome = 6850.25m
                 }
             };
             return JsonSerializer.Serialize(stats);
