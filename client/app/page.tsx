@@ -1,77 +1,139 @@
 'use client'
 
-import Image from "next/image";
-import {useState, useEffect} from "react";
-import {getOrderDetails} from "../lib/api";
+import { useState, useEffect } from "react";
+import { getMonthlyOrderStats, getMonthlyIncomeSummary } from "../lib/api";
+import { Chart, registerables } from 'chart.js';
+import {Bar} from "react-chartjs-2";
+
+Chart.register(...registerables);
 
 export default function Home() {
-const [orderDetails, setOrderDetails] = useState<any | null>(null);
+  const [monthlyStats, setMonthlyStats] = useState<{ CompanyName: string; TotalIncome: number }[] | null>(null);
+  const [monthlyIncomeSummary, setMonthlyIncomeSummary] = useState<{ Year: number; Month: number; TotalIncome: number }[] | null>(null);
 
-useEffect(() => {
-  getOrderDetails(1)
-  .then(setOrderDetails)
-  .catch(error => {
-    console.error('Error fetching order details:', error);
-  });
-}, []);
+  const labels = monthlyStats?.map((stat) => stat.CompanyName) || [];
+  const datasets = monthlyStats?.map((stat) => Number(stat.TotalIncome)) || [];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        // Title of Graph
+        label: "My Bar Chart",
+        data: datasets,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+        ],
+        borderWidth: 1,
+        barPercentage: 1,
+        borderRadius: {
+          topLeft: 5,
+          topRight: 5,
+        },
+      },
+      // insert similar in dataset object for making multi bar chart
+    ],
+  };
+  const options = {
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Total Income",
+        },
+        display: true,
+        beginAtZero: true,
+        max: 9999.99,
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Companies",
+        },
+        display: true,
+      },
+    },
+  };
+
+  // Month labels for the income summary chart
+  const monthLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  // Prepare data for monthly income summary chart
+  //const incomeSummaryLabels = monthlyIncomeSummary?.map(() => "") || monthLabels;
+  const incomeSummaryDatasets = monthlyIncomeSummary?.map((item) => Number(item.TotalIncome)) || [];
+  const incomeSummaryData = {
+    labels: monthLabels,
+    datasets: [
+      {
+        label: "Monthly Income Summary",
+        data: incomeSummaryDatasets,
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgb(54, 162, 235)",
+        borderWidth: 1,
+        barPercentage: 0.8,
+        borderRadius: {
+          topLeft: 5,
+          topRight: 5,
+        },
+      },
+    ],
+  };
+  const incomeSummaryOptions = {
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Total Income",
+        },
+        display: true,
+        beginAtZero: true,
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Month",
+        },
+        display: true,
+      },
+    },
+  };
+
+  useEffect(() => {
+    getMonthlyOrderStats()
+      .then(setMonthlyStats)
+      .catch(error => {
+        console.error('Error fetching monthly order stats:', error);
+      });
+    
+    getMonthlyIncomeSummary()
+      .then(setMonthlyIncomeSummary)
+      .catch(error => {
+        console.error('Error fetching monthly income summary:', error);
+      });
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start gap-8">
+        <div className="mt-8 w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-4 text-black dark:text-zinc-50">Chart.js Example</h2>
+              <div style={{ width: "1000px" }}>
+              <Bar data={data} options={options} />
+              </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-4 text-black dark:text-zinc-50">Monthly Income Summary</h2>
+          <div style={{ width: "1000px" }}>
+            <Bar data={incomeSummaryData} options={incomeSummaryOptions} />
+          </div>
         </div>
       </main>
     </div>

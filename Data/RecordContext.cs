@@ -17,6 +17,7 @@ namespace logistics_visualization_demo.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<MonthlyOrderStat> MonthlyOrderStats { get; set; }
+        public DbSet<MonthlyIncomeSummary> MonthlyIncomeSummary { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
