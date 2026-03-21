@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { getMonthlyOrderStats, getMonthlyIncomeSummary } from "../lib/api";
+import { getMonthlyOrderStats, getMonthlyIncomeSummary, getOrders } from "../lib/api";
 import { Chart, registerables } from 'chart.js';
 import {Bar} from "react-chartjs-2";
 
 Chart.register(...registerables);
 
 export default function Home() {
-  const [monthlyStats, setMonthlyStats] = useState<{ CompanyName: string; TotalIncome: number }[] | null>(null);
+  const [monthlyStats, setMonthlyStats] = useState<{ CompanyName: string; TotalIncome: number; TotalOrders: number; Year: number; Month: number; CompanyId: number }[] | null>(null);
   const [monthlyIncomeSummary, setMonthlyIncomeSummary] = useState<{ Year: number; Month: number; TotalIncome: number }[] | null>(null);
 
   const labels = monthlyStats?.map((stat) => stat.CompanyName) || [];
@@ -117,6 +117,11 @@ export default function Home() {
       .then(setMonthlyIncomeSummary)
       .catch(error => {
         console.error('Error fetching monthly income summary:', error);
+      });
+    
+    getOrders()
+      .catch(error => {
+        console.error('Error fetching orders:', error);
       });
   }, []);
 

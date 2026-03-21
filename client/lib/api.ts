@@ -26,3 +26,17 @@
        console.log('Monthly income summary data:', data);
        return data;
      }
+
+   export async function getOrders() {
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    const response = await fetch(`${API_BASE}/api/data/orders`);
+       if (!response.ok) {
+         console.error('Failed to fetch orders');
+         throw new Error('Failed to fetch orders');
+       }
+       console.log('Orders fetched successfully');
+       const data = await response.json();
+       console.log('Orders data:', data);
+       return data;
+     }
