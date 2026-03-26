@@ -6,9 +6,6 @@ namespace logistics_visualization_demo.Models
 {
     public class MonthlyOrderStat
     {
-        [Key]
-        public string Id { get; set; } = string.Empty;
-        
         public int Year { get; set; }
         
         public int Month { get; set; }
