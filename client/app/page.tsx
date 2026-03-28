@@ -11,9 +11,12 @@ import { ChartContainer } from "../components/ui/ChartContainer";
 
 Chart.register(...registerables);
 
+type Tab = 'company' | 'monthly';
+
 export default function Home() {
   const [monthlyStats, setMonthlyStats] = useState<{ CompanyName: string; TotalIncome: number; TotalOrders: number; Year: number; Month: number; CompanyId: number }[] | null>(null);
   const [monthlyIncomeSummary, setMonthlyIncomeSummary] = useState<{ Year: number; Month: number; TotalIncome: number }[] | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>('company');
 
   const labels = monthlyStats?.map((stat) => stat.CompanyName) || [];
   const datasets = monthlyStats?.map((stat) => Number(stat.TotalIncome)) || [];
@@ -34,7 +37,7 @@ export default function Home() {
     ],
   };
   
-  const companyIncomeOptions = getBarChartOptions("Company Income Overview", "Income ($)");
+  const companyIncomeOptions = getBarChartOptions("Company Income Overview", "Total Charges");
 
   // Month labels for the income summary chart
   const monthLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -56,7 +59,7 @@ export default function Home() {
     ],
   };
   
-  const incomeSummaryOptions = getBarChartOptions("Monthly Income Summary", "Income ($)");
+  const incomeSummaryOptions = getBarChartOptions("Monthly Income Summary", "Total Charges");
 
   useEffect(() => {
     getMonthlyOrderStats()
@@ -79,36 +82,66 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Logistics Visualization Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-1">Real-time data insights and analytics</p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Logistics Visualization Dashboard</h1>
+          <p className="text-sm text-gray-500 mt-1">Real-time data insights and analytics</p>
         </div>
       </header>
       
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8 justify-center" aria-label="Tabs">
+            <button
+              onClick={() => setActiveTab('company')}
+              className={`
+                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${activeTab === 'company' 
+                  ? 'border-green-500 text-green-600' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
+              `}
+            >
+              Company Income
+            </button>
+            <button
+              onClick={() => setActiveTab('monthly')}
+              className={`
+                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${activeTab === 'monthly' 
+                  ? 'border-green-500 text-green-600' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
+              `}
+            >
+              Monthly Summary
+            </button>
+          </nav>
+        </div>
+      </div>
+      
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <main className="w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-5xl mx-auto">
           {/* Company Income Chart */}
-          <Card className="col-span-1 lg:col-span-2">
-            <ChartContainer title="Company Income Overview" description="Monthly income breakdown by company">
-              <div style={{ height: '400px' }}>
-                <Bar data={companyIncomeData} options={companyIncomeOptions} />
-              </div>
-            </ChartContainer>
-          </Card>
+          {activeTab === 'company' && (
+            <Card>
+              <ChartContainer title="Company Income Overview" description="Monthly income breakdown by company">
+                <div style={{ height: '400px' }}>
+                  <Bar data={companyIncomeData} options={companyIncomeOptions} />
+                </div>
+              </ChartContainer>
+            </Card>
+          )}
           
           {/* Monthly Income Summary Chart */}
-          <Card className="col-span-1 lg:col-span-2">
-            <ChartContainer title="Monthly Income Summary" description="Yearly income trends across all months">
-              <div style={{ height: '400px' }}>
-                <Bar data={incomeSummaryData} options={incomeSummaryOptions} />
-              </div>
-            </ChartContainer>
-          </Card>
+          {activeTab === 'monthly' && (
+            <Card>
+              <ChartContainer title="Monthly Income Summary" description="Yearly income trends across all months">
+                <div style={{ height: '400px' }}>
+                  <Bar data={incomeSummaryData} options={incomeSummaryOptions} />
+                </div>
+              </ChartContainer>
+            </Card>
+          )}
         </div>
       </main>
     </div>
