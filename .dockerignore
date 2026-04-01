@@ -1,0 +1,43 @@
+# .dockerignore: Exclude files/directories from Docker build context
+# Reduces image size and build time
+
+# Root exclusions
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+*.md
+!README.md
+.code-workspace
+
+# .NET build artifacts
+bin/
+obj/
+*.dll
+*.pdb
+.vs/
+.vscode/
+
+# Frontend
+client/node_modules
+client/.next
+client/dist
+client/.env.local
+
+# Tests
+**/*.Tests/bin
+**/*.Tests/obj
+
+# IDE & Editor
+.idea/
+*.code-workspace
+Thumbs.db
+.DS_Store
+
+# Docker & deployment
+docker-compose.override.yml
+Dockerfile
+.dockerignore

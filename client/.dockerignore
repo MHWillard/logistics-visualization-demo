@@ -1,0 +1,21 @@
+# .dockerignore for Next.js frontend
+
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env.local
+.env.*.local
+*.md
+.code-workspace
+
+# Next.js
+.next
+dist
+.env
+
+# IDE
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
