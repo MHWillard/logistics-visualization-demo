@@ -9,9 +9,16 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: logistics-sqlserver
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+        reservations:
+          memory: 1g
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "YourComplexPassword123!"  # CHANGE: Use .env file for production
+      SA_PASSWORD: "YourComplexPassword123!"  # Ensure strong password
+      MSSQL_MEMORY_LIMIT_MB: "2048"  # Limit memory usage to 2GB
     ports:
       - "1433:1433"  # SQL Server port (expose for local dev/testing)
     volumes:
@@ -25,13 +32,13 @@ services:
         - -U
         - sa
         - -P
-        - "YourComplexPassword123!"  # CHANGE: Match SA_PASSWORD above
+        - "YourComplexPassword123!"  # Ensure password matches
         - -Q
         - "SELECT 1"
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
     networks:
       - app-network
     restart: unless-stopped
@@ -44,15 +51,15 @@ services:
     container_name: logistics-backend
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourComplexPassword123!;TrustServerCertificate=true;Encrypt=false;
+      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;ssword=YourComplexPassword123!;TrustServerCertificate=true;Encrypt=false;
     ports:
-      - "5088:5088"  # Backend API
+      - "7167:7167"  # Backend API
     depends_on:
       sqlserver:
         condition: service_healthy
     networks:
       - app-network
-    restart: unless-stopped
+    restart: on-failure
 
   # Next.js Frontend
   frontend:
@@ -64,11 +71,12 @@ services:
       - NEXT_PUBLIC_API_BASE_URL=http://backend:5088  # Internal: use container hostname
     ports:
       - "3000:3000"  # Frontend
-    depends_on:
-      - backend
+    #depends_on:
+      #backend:
+        #condition: service_started
     networks:
       - app-network
-    restart: unless-stopped
+    restart: on-failure
 
 volumes:
   sqlserver-data:
