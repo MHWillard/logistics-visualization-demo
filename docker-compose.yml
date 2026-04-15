@@ -1,0 +1,87 @@
+# Docker Compose Orchestration for Logistics Visualization Demo
+# Three containers: backend (ASP.NET), frontend (Next.js), database (SQL Server)
+# See Agents/docker-agent.md for comprehensive guidance
+
+version: '3.9'
+
+services:
+  # SQL Server 2022 Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: logistics-sqlserver
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+        reservations:
+          memory: 1g
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourComplexPassword123!"  # Ensure strong password
+      MSSQL_MEMORY_LIMIT_MB: "2048"  # Limit memory usage to 2GB
+    ports:
+      - "1433:1433"  # SQL Server port (expose for local dev/testing)
+    volumes:
+      - sqlserver-data:/var/opt/mssql  # Persist database across restarts
+    healthcheck:
+      test: 
+        - CMD
+        - /opt/mssql-tools18/bin/sqlcmd
+        - -S
+        - localhost
+        - -U
+        - sa
+        - -P
+        - "YourComplexPassword123!"  # Ensure password matches
+        - -Q
+        - "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # .NET 8 Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: logistics-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;ssword=YourComplexPassword123!;TrustServerCertificate=true;Encrypt=false;
+    ports:
+      - "7167:7167"  # Backend API
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: on-failure
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: logistics-frontend
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://backend:5088  # Internal: use container hostname
+    ports:
+      - "3000:3000"  # Frontend
+    #depends_on:
+      #backend:
+        #condition: service_started
+    networks:
+      - app-network
+    restart: on-failure
+
+volumes:
+  sqlserver-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

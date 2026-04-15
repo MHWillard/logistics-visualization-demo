@@ -10,6 +10,12 @@ namespace logistics_visualization_demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Load Docker-specific configuration if running in container
+            if (builder.Environment.IsProduction())
+            {
+                builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: false);
+            }
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -52,7 +58,18 @@ namespace logistics_visualization_demo
                 var services = scope.ServiceProvider;
 
                 var context = services.GetRequiredService<RecordContext>();
-                context.Database.EnsureCreated();
+                
+                // Run migrations if database exists; otherwise create and seed
+                try
+                {
+                    context.Database.Migrate();
+                }
+                catch
+                {
+                    // Fallback: create database if migration fails (e.g., first run)
+                    context.Database.EnsureCreated();
+                }
+                
                 DbInitializer.Initialize(context);
             }
 
