@@ -58,18 +58,22 @@ namespace logistics_visualization_demo
                 var services = scope.ServiceProvider;
 
                 var context = services.GetRequiredService<RecordContext>();
-                
-                // Run migrations if database exists; otherwise create and seed
+
+                // Log the connection string for debugging
+                var connectionString = context.Database.GetDbConnection().ConnectionString;
+                Console.WriteLine($"Using connection string: {connectionString}");
+
+                // Run migrations if database exists; otherwise log an error
                 try
                 {
                     context.Database.Migrate();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Fallback: create database if migration fails (e.g., first run)
-                    context.Database.EnsureCreated();
+                    Console.WriteLine("Database migration failed: " + ex.Message);
+                    throw;
                 }
-                
+
                 DbInitializer.Initialize(context);
             }
 

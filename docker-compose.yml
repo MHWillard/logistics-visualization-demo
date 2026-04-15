@@ -51,12 +51,8 @@ services:
     container_name: logistics-backend
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;ssword=YourComplexPassword123!;TrustServerCertificate=true;Encrypt=false;
     ports:
-      - "7167:7167"  # Backend API
-    depends_on:
-      sqlserver:
-        condition: service_healthy
+      - "5088:5088"  # Backend API
     networks:
       - app-network
     restart: on-failure

@@ -22,6 +22,9 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 
+# Enable Swagger for development
+ENV ASPNETCORE_ENVIRONMENT=Development
+
 # Health check for backend API
 HEALTHCHECK --interval=10s --timeout=3s --start-period=40s --retries=3 \
     CMD dotnet /app/logistics-visualization-demo.dll || exit 1
