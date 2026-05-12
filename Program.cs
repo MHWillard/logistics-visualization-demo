@@ -10,10 +10,9 @@ namespace logistics_visualization_demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Load Docker-specific configuration if running in container
-            if (builder.Environment.IsProduction())
+            if (builder.Environment.IsDevelopment())
             {
-                builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: false);
+                builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             }
 
             // Add services to the container.
@@ -24,7 +23,7 @@ namespace logistics_visualization_demo
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<RecordContext>(options =>
-  options.UseSqlServer(builder.Configuration.GetConnectionString("RecordContext")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("RecordContext")));
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -63,14 +62,15 @@ namespace logistics_visualization_demo
                 var connectionString = context.Database.GetDbConnection().ConnectionString;
                 Console.WriteLine($"Using connection string: {connectionString}");
 
-                // Run migrations if database exists; otherwise log an error
+                // Ensure database is created for local development
                 try
                 {
-                    context.Database.Migrate();
+                    context.Database.EnsureDeleted(); // Drop existing database
+                    context.Database.EnsureCreated(); // Recreate database
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Database migration failed: " + ex.Message);
+                    Console.WriteLine("Database creation failed: " + ex.Message);
                     throw;
                 }
 

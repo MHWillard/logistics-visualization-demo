@@ -12,8 +12,8 @@ using logistics_visualization_demo.Data;
 namespace logistics_visualization_demo.Migrations
 {
     [DbContext(typeof(RecordContext))]
-    [Migration("20260310220043_AddMonthlyOrderStatsView")]
-    partial class AddMonthlyOrderStatsView
+    [Migration("20260512001322_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,25 @@ namespace logistics_visualization_demo.Migrations
                     b.ToTable("Company", (string)null);
                 });
 
+            modelBuilder.Entity("logistics_visualization_demo.Models.MonthlyIncomeSummary", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalIncome")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MonthlyIncomeSummary");
+                });
+
             modelBuilder.Entity("logistics_visualization_demo.Models.MonthlyOrderStat", b =>
                 {
                     b.Property<int>("CompanyId")
@@ -49,9 +68,6 @@ namespace logistics_visualization_demo.Migrations
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Month")
