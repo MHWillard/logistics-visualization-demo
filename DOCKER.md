@@ -69,7 +69,7 @@ cp .env.example .env
 
 Edit `.env` and update sensitive values:
 ```
-SA_PASSWORD=YourComplexPassword123!
+SA_PASSWORD=YourUpdatedPassword123!
 ASPNETCORE_ENVIRONMENT=Production
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5088
 ```
@@ -81,7 +81,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:5088
 The backend uses the connection string from `appsettings.Docker.json`:
 
 ```
-Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourComplexPassword123!;...
+Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourUpdatedPassword123!;...
 ```
 
 - `sqlserver` = Docker container hostname (resolved via Docker DNS)
@@ -101,7 +101,7 @@ docker-compose exec backend dotnet ef database update
 ### Access SQL Server CLI
 
 ```bash
-docker-compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P YourComplexPassword123! -Q "SELECT 1"
+docker-compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P YourUpdatedPassword123! -Q "SELECT 1"
 ```
 
 ### View Application Logs

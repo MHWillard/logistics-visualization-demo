@@ -14,6 +14,10 @@ namespace logistics_visualization_demo
             {
                 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             }
+            else
+            {
+                builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: false);
+            }
 
             // Add services to the container.
 

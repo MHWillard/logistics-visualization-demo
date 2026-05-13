@@ -17,7 +17,7 @@ services:
           memory: 1g
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "YourComplexPassword123!"  # Ensure strong password
+      SA_PASSWORD: "YourUpdatedPassword123!"  # Ensure strong password
       MSSQL_MEMORY_LIMIT_MB: "2048"  # Limit memory usage to 2GB
     ports:
       - "1433:1433"  # SQL Server port (expose for local dev/testing)
@@ -32,7 +32,7 @@ services:
         - -U
         - sa
         - -P
-        - "YourComplexPassword123!"  # Ensure password matches
+        - "YourUpdatedPassword123!"  # Ensure password matches
         - -Q
         - "SELECT 1"
       interval: 10s
@@ -53,6 +53,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "5088:5088"  # Backend API
+    depends_on:
+      sqlserver:
+        condition: service_started
     networks:
       - app-network
     restart: on-failure

@@ -173,7 +173,7 @@ services:
     container_name: logistics-sqlserver
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "YourComplexPassword123!"  # CHANGE: Use .env file
+      SA_PASSWORD: "YourUpdatedPassword123!"  # CHANGE: Use .env file
     ports:
       - "1433:1433"
     volumes:
@@ -187,7 +187,7 @@ services:
         - -U
         - sa
         - -P
-        - "YourComplexPassword123!"
+        - "YourUpdatedPassword123!"
         - -Q
         - "SELECT 1"
       interval: 10s
@@ -206,7 +206,7 @@ services:
     container_name: logistics-backend
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourComplexPassword123!;TrustServerCertificate=true;Encrypt=false;
+      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourUpdatedPassword123!;TrustServerCertificate=true;Encrypt=false;
     ports:
       - "5088:5088"
     depends_on:
