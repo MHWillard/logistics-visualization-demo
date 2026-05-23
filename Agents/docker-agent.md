@@ -206,7 +206,7 @@ services:
     container_name: logistics-backend
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext-0e9;User Id=sa;Password=YourUpdatedPassword123!;TrustServerCertificate=true;Encrypt=false;
+      - SQLSERVER_CONNECTION=Server=sqlserver,1433;Database=RecordContext;User Id=sa;Password=YourUpdatedPassword123!;Encrypt=no;
     ports:
       - "5088:5088"
     depends_on:
